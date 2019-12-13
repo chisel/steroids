@@ -72,6 +72,27 @@ Adds a new service in a specific directory (relative to `src`):
 sd add service <name> --directory <path>
 ```
 
+#### Listing all path aliases
+
+Displays a list of all path aliases defined in tsconfig.json:
+```bash
+sd path list
+```
+
+#### Creating a new path alias
+
+Defines a new path alias in tsconfig.json that will be resolved automatically upon running the project:
+```bash
+sd path new <alias> <target>
+```
+
+#### Deleting a path alias
+
+Deletes a path alias from tsconfig.json:
+```bash
+sd path delete <alias>
+```
+
 #### Generating the documentation
 
 Generates the TypeDoc developer documentation at `/docs`:

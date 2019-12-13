@@ -1,0 +1,49 @@
+{
+  "name": "@chisel/steroids",
+  "version": "0.0.0",
+  "description": "Framework for building Node.js servers with Express on steroids!",
+  "main": "./bin/sd.js",
+  "bin": {
+    "sd": "./bin/sd.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/typescript/bin/tsc --build",
+    "fetch-template": "echo \"Fetching Steroids template...\" && rm -r ./template && git clone git@github.com:chisel/steroids-template.git ./template && cd ./template && rm -r .git && rm README.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chisel/steroids.git"
+  },
+  "keywords": [
+    "node.js",
+    "express",
+    "typescript",
+    "server",
+    "steroids",
+    "fast",
+    "development"
+  ],
+  "author": "Ramtin Soltani <ramtin@chiselpowered.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chisel/steroids/issues"
+  },
+  "homepage": "https://github.com/chisel/steroids#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "chokidar": "^3.3.0",
+    "commander": "^4.0.1",
+    "fs-extra": "^8.1.0",
+    "http-server": "^0.12.0",
+    "mustache": "^3.1.0",
+    "typescript": "^3.7.3",
+    "validate-npm-package-name": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
+    "@types/http-server": "^0.10.0",
+    "@types/mustache": "^0.8.32",
+    "@types/validate-npm-package-name": "^3.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+import { Service, OnInjection, OnConfig, ServerConfig } from '@steroids/core';
+
+@Service({
+  name: '{{kebabName}}'
+})
+export class {{pascalName}} implements OnInjection, OnConfig {
+
+  onInjection(services: any) {
+
+  }
+
+  onConfig(config: ServerConfig) {
+
+  }
+
+}

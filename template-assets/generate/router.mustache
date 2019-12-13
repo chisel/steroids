@@ -1,0 +1,18 @@
+import { Router, RouteMethod, OnInjection, OnConfig, ServerConfig } from '@steroids/core';
+import { Request, Response, NextFunction } from 'express';
+
+@Router({
+  name: '{{kebabName}}',
+  routes: []
+})
+export class {{pascalName}} implements OnInjection, OnConfig {
+
+  onInjection(services: any) {
+
+  }
+
+  onConfig(config: ServerConfig) {
+
+  }
+
+}

@@ -37,6 +37,7 @@ program
   .alias('d')
   .description('generates developer documentation with TypeDocs')
   .option('-s, --serve [port_number]', 'serves the generated documentation on the given port (defaults to 7000)')
+  .option('-d, --directory <path>', 'directory path to generate the documentation at (relative to project root)')
   .action(docsAction);
 
 // Command: build

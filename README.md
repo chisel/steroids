@@ -54,9 +54,10 @@ After installing Steroids globally, the `sd` command will be available with the 
     - **-p, --port &lt;port_number&gt;**: Overrides the port number.
     - **-w, --watch**: Enables live reloading by watching the source files for changes.
   - **sd test**: Builds and runs the tests against the last server build.
-  - **sd docs [options]**: Generates the documentation using TypeDoc.  
+  - **sd docs [options]**: Generates the documentation using TypeDoc inside `docs` directory.  
     Options:
     - **-s, --serve [port_number]**: Serves the documentation on port 7000 or the given port number.
+    - **-d, --directory &lt;path&gt;**: A path relative to project root to override the default documentation directory.
   - **sd --version**: Displays Steroids version.
   - **sd --help**: Displays Steroids help. You can also use this option with any commands to view detailed usage information.
 

@@ -28,7 +28,7 @@ export default async function action(options: any) {
     // Generate the documentation using local typedoc module
     await new Promise((resolve, reject) => {
 
-      child.exec('./node_modules/typedoc/bin/typedoc --out docs src', {
+      child.exec(`./node_modules/typedoc/bin/typedoc --out ${options.directory || 'docs'} src`, {
         cwd: process.cwd(),
         windowsHide: true
       }, (error, stdout, stderr) => {
@@ -50,12 +50,12 @@ export default async function action(options: any) {
 
     });
 
-    console.log(chalk.greenBright.bold(`Documentation generated at /docs`));
+    console.log(chalk.greenBright.bold(`Documentation generated at /${path.join(options.directory || 'docs')}`));
 
     // Serve the documentation if asked
     if ( options.serve ) {
 
-      const serveStatic = serve(path.resolve(process.cwd(), 'docs'));
+      const serveStatic = serve(path.resolve(process.cwd(), options.directory || 'docs'));
 
       http.createServer((req, res) => {
 

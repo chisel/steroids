@@ -1,6 +1,8 @@
 import child from 'child_process';
 import chalk from 'chalk';
-import server from 'http-server';
+import serve from 'serve-static';
+import finalhandler from 'finalhandler';
+import http from 'http';
 import path from 'path';
 
 /**
@@ -23,10 +25,10 @@ export default async function action(options: any) {
 
     console.log(chalk.yellow.bold(`Generating the documentation...`));
 
-    // Generate the documentation using local npm script
+    // Generate the documentation using local typedoc module
     await new Promise((resolve, reject) => {
 
-      child.exec('npm run docs', {
+      child.exec('./node_modules/typedoc/bin/typedoc --out docs src', {
         cwd: process.cwd(),
         windowsHide: true
       }, (error, stdout, stderr) => {
@@ -53,7 +55,13 @@ export default async function action(options: any) {
     // Serve the documentation if asked
     if ( options.serve ) {
 
-      server.createServer({ root: path.resolve(process.cwd(), 'docs') })
+      const serveStatic = serve(path.resolve(process.cwd(), 'docs'));
+
+      http.createServer((req, res) => {
+
+        serveStatic(<any>req, <any>res, finalhandler(req, res));
+
+      })
       .listen(options.serve, () => {
 
         console.log(chalk.greenBright.bold(`Documentation is being served at http://localhost:${options.serve}`));

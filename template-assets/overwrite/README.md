@@ -12,3 +12,15 @@ Read the [Steroids documentation](https://github.com/chisel/steroids/tree/master
   - `npm run launch`: Runs the last build.
   - `npm run start`: Builds and runs the server.
   - `npm run docs`: Builds the internal documentation.
+
+# Launching the Server
+
+If launching from the project root, run any of the following:
+  - `npm run launch`
+  - `npm run start` (builds first)
+  - `sd run` (using [Steroids CLI](https://github.com/chisel/steroids))
+  - `node dist/@steroids/main`
+
+If running from the dist directory, run `node @steroids/main`
+
+> **NOTE:** If running the server from any other directory where CWD is not dist or project root, path aliases (TypeScript paths defined in tsconfig.json) will fail to resolve.

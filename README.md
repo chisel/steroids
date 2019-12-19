@@ -81,7 +81,7 @@ sd path list
 
 #### Creating a new path alias
 
-Defines a new path alias in tsconfig.json that will be resolved automatically upon running the project:
+Defines a new path alias in tsconfig.json that will be resolved automatically upon running the project (target must be relative to `src`):
 ```bash
 sd path new <alias> <target>
 ```

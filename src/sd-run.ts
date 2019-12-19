@@ -108,11 +108,59 @@ export default async function action(options: any) {
 
 }
 
-function buildSource() {
+async function buildSource() {
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
 
-    child.exec('npm run build', {
+    child.exec('node pre-build.js', {
+      cwd: process.cwd(),
+      windowsHide: true
+    }, (error, stdout, stderr) => {
+
+      if ( error ) {
+
+        console.log(chalk.redBright.bold(stderr));
+        reject(error);
+
+      }
+      else {
+
+        console.log(stdout);
+        resolve();
+
+      }
+
+    });
+
+  });
+
+  await new Promise((resolve, reject) => {
+
+    child.exec('./node_modules/typescript/bin/tsc --build', {
+      cwd: process.cwd(),
+      windowsHide: true
+    }, (error, stdout, stderr) => {
+
+      if ( error ) {
+
+        console.log(chalk.redBright.bold(stderr));
+        reject(error);
+
+      }
+      else {
+
+        console.log(stdout);
+        resolve();
+
+      }
+
+    });
+
+  });
+
+  await new Promise((resolve, reject) => {
+
+    child.exec('node post-build.js', {
       cwd: process.cwd(),
       windowsHide: true
     }, (error, stdout, stderr) => {
@@ -138,7 +186,7 @@ function buildSource() {
 
 function runServer() {
 
-  return child.spawn('npm', ['run', 'launch'], {
+  return child.spawn('node', ['dist/@steroids/main.js'], {
     cwd: process.cwd(),
     windowsHide: true,
     stdio: 'inherit'

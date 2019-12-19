@@ -14,10 +14,23 @@ Here's a quick list of features Steroids provides:
   - Dynamic route and service installation
   - Dynamic service injection without circular dependency issues
   - Path alias support for easier imports
+  - Customizable built-in logger with file manager and auto archiver
   - Unit testing with Mocha and Chai
   - TypeDoc ready
 
 You can use the [template repository](https://github.com/chisel/steroids-template) directly or use the [Steroids CLI](https://github.com/chisel/steroids) for even faster development (recommended). [Steroids CLI](https://github.com/chisel/steroids) allows creating new backend projects using Steroids template (with custom configuration) and also to add components (such as routers, services, etc.) with template code.
+
+# Launching the Server
+
+If launching from the project root, run any of the following:
+  - `npm run launch`
+  - `npm run start` (builds first)
+  - `sd run` (using [Steroids CLI](https://github.com/chisel/steroids))
+  - `node dist/@steroids/main`
+
+If running from the dist directory, run `node @steroids/main`
+
+> **NOTE:** If running the server from any other directory where CWD is not dist or project root, path aliases (TypeScript paths defined in tsconfig.json) will fail to resolve.
 
 # Development
 
@@ -521,6 +534,46 @@ function customValidator(req: Request) {
 }
 ```
 
+## Server Logger
+
+The built-in logger is available globally as `log` with the following methods:
+
+```ts
+log.debug('Log at debug level', 'Additional message 1', 'Additional message 2');
+log.info('Log at info level');
+log.notice('Log important message at notice level');
+log.warn('Log warning message at warn level');
+log.error('Log this error at error level', new Error('Some error!'));
+```
+
+Using the built-in logger instead of plain console logs has the following benefits:
+  - Formatted logs with date time strings (local to the server timezone set in the config)
+  - Writing logs on disk at `dist/.logs/`, organized by date (each file contains logs for one day)
+  - Disk management for deleting/archiving log files by setting a max age in the server config
+  - Automatically archiving log files (when passed their max age) by moving them to `dist/.logs/archived/` and compressing them for smaller disk space usage
+  - Five different log levels
+  - Both the console and log files can be customized to contain different log levels
+  - Internal queue system to guarantee logging order on disk without blocking the event loop
+  - Identical API to console.log
+
+### Saving Logs on Disk
+
+The built-in logger saves logs on disk by default (only if the `log` API is used). In order to disable this behavior, set `writeLogsToFile` to `false` in the [server config](#server-config).
+
+All logs are separated into various files organized based on their date. Each file has the date as its filename (`dd-mm-yyyy.log`) and lives at `dist/.logs/` directory.
+
+#### Logs Max Age Control
+
+The default max age of log files is 7 days. This means that any file that is 7 days older than the current date (based on server timezone) will be archived.
+
+Archived log files are compressed and moved to `dist/.logs/archived/` directory. If archiving is disabled (by setting `archiveLogs` to `false` in the [server config](#server-config)) then logs will be deleted instead.
+
+However, if max age is set to 0 (by changing `logFileMaxAge` in [server config](#server-config)) log files won't be archived nor deleted.
+
+### Log Levels
+
+Both the console and disk can be customized to include any levels of logs. By default, the console displays all levels except for `debug` and all log levels are saved on disk. To customize those behaviors, change `consoleLogLevels` and `logFileLevels` in the [server config](#server-config).
+
 ## Server Config
 
 The server has a configuration file located at `src/config.json` with the following settings:
@@ -528,13 +581,15 @@ The server has a configuration file located at `src/config.json` with the follow
 | Key | Type | Description |
 |:----|:----:|:------------|
 | port | number | The port number to launch the server on (defaults to `5000`). |
-| verboseLogs | boolean | Shows startup logs and route-specific logs (defaults to `true`). |
+| timezone | string | The timezone of the server (defaults to local system timezone). |
+| colorfulLogs | boolean | If true, console logs will have color (defaults to `true`). |
+| consoleLogLevels | all&vert;Array<debug&vert;info&vert;notice&vert;warn&vert;error> | An array of log levels to show in the console or `all` (no array) to show all levels (defaults to `['info', 'notice', 'warn', 'error']`). |
+| writeLogsToFile | boolean | Will write all server logs on disk (defaults to `true`). |
+| logFileMaxAge | number | The maximum age of a logs file in days. When passed, the file will either get archived or deleted (defaults to `7`). |
+| logFileLevels | all&vert;Array<debug&vert;info&vert;notice&vert;warn&vert;error> | An array of log levels to write on disk or `all` (no array) to write all levels (defaults to `'all'`). |
+| archiveLogs | boolean | Will archive logs written on disk that are older than their max age (defaults to `true`). |
 | predictive404 | boolean | If true, installs a 404 handler at the top of the stack instead (this can be configured through `predictive404Priority`), which predicts if path will match with any middleware in the stack and rejects the request with a 404 error if not. This is useful as requests that will eventually result in a 404 error won't go through the stack in the first place. Please note that the prediction ignores all `*` and `/` routes (defaults to `false`). |
 | predictive404Priority | number | The priority of the predictive 404 middleware (defaults to `Infinity`). |
-
-### Config Expansion
-
-You can expand the config object typing by editing the `ServerConfig` model inside `src/config.model.ts`.
 
 ### Config Injection
 
@@ -551,6 +606,10 @@ class implements OnConfig {
 
 }
 ```
+
+### Config Expansion
+
+You can expand the config object typing by editing the `ServerConfig` model inside `src/config.model.ts`. This would provide typings for your customized server config to all routers and services accessing the config object through `OnConfig` interface.
 
 ## Server Assets
 

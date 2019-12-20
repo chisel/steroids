@@ -96,7 +96,7 @@ export default async function action(options: any) {
 
     }
 
-    console.log(chalk.greenBright.bold(`Server running at http://localhost:${options.port}`));
+    console.log(chalk.greenBright.bold(`Server running at http://localhost:${options.port}${options.watch ? ' with live reloading' : ''}`));
 
   }
   catch (error) {

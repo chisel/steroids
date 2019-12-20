@@ -46,18 +46,41 @@ export default async function action(component: string, name: string, options: a
     // Create the component
     const templatePath = path.resolve(assetsDir, 'generate', component + '.mustache');
 
-    // If component template doesn't exists
+    // If component template doesn't exist
     if ( ! fs.existsSync(templatePath) )
       throw new Error(`Component template missing! Please reinstall steroids and try again.`);
 
     // Load the template
     const componentTemplate = fs.readFileSync(templatePath, { encoding: 'utf-8' });
     // Generate the component
-    const generated = mustache.render(componentTemplate, { kebabName: name, pascalName: pascalName });
+    const generated = mustache.render(componentTemplate, { kebabName: name, pascalName });
     // Write the component to destination
     fs.writeFileSync(path.resolve(options.directory, `${name}.${component}.ts`), generated, { encoding: 'utf-8' });
 
-    console.log(chalk.greenBright.bold(`${capitalize(component)} component "${name}" created at ${path.resolve(options.directory, `${name}.${component}.ts`)}`));
+    // If tests are enabled inside the project and not skipping
+    if ( fs.existsSync(path.resolve(process.cwd(), 'test')) && ! options.skipTests ) {
+
+      // Create the test suite
+      const testTemplatePath = path.resolve(assetsDir, 'generate', 'test.mustache');
+
+      // If test template doesn't exist
+      if ( ! fs.existsSync(testTemplatePath) )
+        throw new Error(`Test template missing! Please reinstall steroids and try again.`);
+
+      // Load the test template
+      const testTemplate = fs.readFileSync(testTemplatePath, { encoding: 'utf-8' });
+      // Generate the test suite
+      const testSuite = mustache.render(testTemplate, { kebabName: name, pascalName });
+      // Write the test suite to tests directory
+      fs.ensureDirSync(path.resolve(process.cwd(), 'test', 'src', component + 's'));
+      fs.writeFileSync(path.resolve(process.cwd(), 'test', 'src', component + 's', `${name}.${component}.spec.ts`), testSuite, { encoding: 'utf-8' });
+
+    }
+
+    const finalPath = path.resolve(options.directory, `${name}.${component}.ts`);
+    const finalPathSrcIndex = finalPath.indexOf('/src');
+
+    console.log(chalk.greenBright.bold(`${capitalize(component)} component "${name}" created at ${finalPath.substr(finalPathSrcIndex !== -1 ? finalPathSrcIndex : 0)}`));
 
   }
   catch (error) {

@@ -20,6 +20,14 @@ Here's a quick list of features Steroids provides:
 
 You can use the [template repository](https://github.com/chisel/steroids-template) directly or use the [Steroids CLI](https://github.com/chisel/steroids) for even faster development (recommended). [Steroids CLI](https://github.com/chisel/steroids) allows creating new backend projects using Steroids template (with custom configuration) and also to add components (such as routers, services, etc.) with template code.
 
+# NPM Scripts
+
+  - `npm start`: Builds and runs the server.
+  - `npm test`: Builds and runs the tests.
+  - `npm run build`: Build the server into `dist`.
+  - `npm run launch`: Runs the last build.
+  - `npm run docs`: Builds the internal documentation.
+
 # Launching the Server
 
 If launching from the project root, run any of the following:
@@ -642,8 +650,18 @@ const error = new ServerError('Message', 'ERROR_CODE'); // Code defaults to 'UNK
 
 > **NOTE:** This class is not an actual extension of the Error class and should not be used when stack trace is needed.
 
+## Testing
+
+Unit testing has been setup using Mocha and Chai. The test files are written in TypeScript inside `test/src` directory and are transpiled to JavaScript in `test/dist` using `test/tsconfig.json` before being run.
+
+When the main test suite `test/dist/main.spec.js` runs, the following happens:
+  1. The latest server build (located at `/dist`) is reconfigured to run at port 8000 without file logging (to avoid polluting the log files) and is launched.
+  2. The `test/dist/` directory is scanned recursively and all test suites are run.
+  3. After all tests finish, the server is killed and reconfigured back to original.
+
+You should write your tests suites inside `test/src/` at any depth and run `npm test` to start the tests.
+
 # Notes
 
-  - You can see some more detailed examples inside the sample files in `services` and `routers` directories.
-  - The directory structure of the server is totally up to you, since the server scans the `src` for `.service.js` and `.router.js` files to install at any depth. Though, path aliases are setup for the default directory structure. You can change aliases by editing `tsconfig.json` and `package.json` if desired.
+  - The directory structure of the server is totally up to you, since the server scans the build directory for `.service.js` and `.router.js` files to install at any depth. Though, path aliases are setup for the default directory structure where services are kept at `src/services` and routers at `src/routers`. You can change aliases by editing `compilerOptions.paths` in `tsconfig.json` if desired or use the [Steroids CLI](https://github.com/chisel/steroids) to manage path aliases.
   - You can make your validators modular by storing the validator functions and the validator body definitions inside other files and reuse them everywhere.

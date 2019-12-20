@@ -8,9 +8,10 @@ Read the [Steroids documentation](https://github.com/chisel/steroids/tree/master
 
 # NPM Scripts
 
+  - `npm start`: Builds and runs the server.
+  - `npm test`: Builds and runs the tests.
   - `npm run build`: Build the server into `dist`.
   - `npm run launch`: Runs the last build.
-  - `npm run start`: Builds and runs the server.
   - `npm run docs`: Builds the internal documentation.
 
 # Launching the Server

@@ -32,9 +32,8 @@ export default async function action(name: string, options: any) {
     // Copy template to project root
     fs.copySync(templateDir, rootDir);
 
-    // Update package.json and package-lock.json
+    // Update package.json
     const packageJson = require(path.resolve(rootDir, 'package.json'));
-    const packageLock = require(path.resolve(rootDir, 'package-lock.json'));
 
     packageJson.name = name;
     packageJson.version = '1.0.0';
@@ -44,29 +43,85 @@ export default async function action(name: string, options: any) {
     delete packageJson.repository;
     delete packageJson.author;
     delete packageJson.keywords;
-    packageLock.name = name;
-    packageLock.version = '1.0.0';
-
-    fs.writeFileSync(path.resolve(rootDir, 'package.json'), JSON.stringify(packageJson, null, 2));
-    fs.writeFileSync(path.resolve(rootDir, 'package-lock.json'), JSON.stringify(packageLock, null, 2));
 
     // Copy README from template-assets/overwrite
     fs.copySync(path.resolve(assetsDir, 'overwrite', 'README.md'), path.resolve(rootDir, 'README.md'));
     // Copy routers and services directories
     fs.copySync(path.resolve(assetsDir, 'overwrite', 'src', 'routers'), path.resolve(rootDir, 'src', 'routers'));
     fs.copySync(path.resolve(assetsDir, 'overwrite', 'src', 'services'), path.resolve(rootDir, 'src', 'services'));
-    // Delete examples if minimal setup
-    if ( options.minimal ) {
+
+    // Delete examples if minimal setup or explicitly asked
+    if ( options.minimal || options.skipExamples ) {
 
       fs.unlinkSync(path.resolve(rootDir, 'src', 'routers', 'example.router.ts'));
       fs.unlinkSync(path.resolve(rootDir, 'src', 'services', 'example.service.ts'));
 
     }
 
+    // Delete tests if minimal setup or explicitly asked
+    if ( options.minimal || options.skipTests ) {
+
+      // Remove the test directory
+      fs.removeSync(path.resolve(rootDir, 'test'));
+      fs.removeSync(path.resolve(rootDir, 'pre-test.js'));
+
+      // Update package.json
+      delete packageJson.dependencies.mocha;
+      delete packageJson.dependencies.chai;
+      delete packageJson.devDependencies['@types/mocha'];
+      delete packageJson.devDependencies['@types/chai'];
+      packageJson.scripts.test = "echo \"Error: no test specified\" && exit 1";
+
+      // Update tsconfig.json
+      const tsconfig = require(path.resolve(rootDir, 'tsconfig.json'));
+
+      tsconfig.exclude.splice(tsconfig.exclude.indexOf('test'), 1);
+
+      fs.writeFileSync(path.resolve(rootDir, 'tsconfig.json'), JSON.stringify(tsconfig, null, 2));
+
+    }
+
+    // Write the final package.json and package-lock.json
+    fs.writeFileSync(path.resolve(rootDir, 'package.json'), JSON.stringify(packageJson, null, 2));
+
+    // Delete package-lock.json
+    fs.removeSync(path.resolve(rootDir, 'package-lock.json'));
+
+    // Initialize git
+    if ( ! options.skipGit ) {
+
+      console.log(chalk.yellow.bold(`Initializing git repository...`));
+
+      await new Promise((resolve, reject) => {
+
+        child.exec('git init', {
+          cwd: rootDir,
+          windowsHide: true
+        }, (error, stdout, stderr) => {
+
+          if ( error ) {
+
+            console.log(chalk.redBright.bold(stderr));
+            reject(error);
+
+          }
+          else {
+
+            if ( options.verbose ) console.log(stdout);
+            resolve();
+
+          }
+
+        });
+
+      });
+
+    }
+
     // Install dependencies
     if ( ! options.skipNpmInstall ) {
 
-      console.log(chalk.yellow.bold(`Installing dependencies"...`));
+      console.log(chalk.yellow.bold(`Installing dependencies...`));
 
       await new Promise((resolve, reject) => {
 
@@ -83,7 +138,7 @@ export default async function action(name: string, options: any) {
           }
           else {
 
-            console.log(stdout);
+            if ( options.verbose ) console.log(stdout);
             resolve();
 
           }

@@ -84,7 +84,7 @@ export default async function action() {
 
     });
 
-    console.log(chalk.greenBright.bold(`Source is built at ${path.resolve(process.cwd(), 'dist')}`));
+    console.log(chalk.greenBright.bold(`Source is built at /dist`));
 
   }
   catch (error) {

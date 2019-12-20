@@ -38,14 +38,33 @@ Creates a new Steroid project:
 sd new <name>
 ```
 
-Creates a new Steroid project without examples:
+Creates a new minimal Steroid project (without tests and examples):
 ```bash
 sd new <name> --minimal
+```
+
+Creates a new Steroid project without examples:
+```bash
+sd new <name> --skip-examples
+```
+
+Creates a new Steroid project without tests:
+```bash
+sd new <name> --skip-tests
 ```
 
 Creates a new Steroid project and skips installing dependencies with NPM:
 ```bash
 sd new <name> --skip-npm-install
+```
+
+Creates a new Steroid project and skips initializing git repository:
+```bash
+sd new <name> --skip-git
+```
+Creates a new Steroid project with verbose logs:
+```bash
+sd new <name> --verbose
 ```
 
 #### Adding a router
@@ -60,6 +79,11 @@ Adds a new router in a specific directory (relative to `src`):
 sd add router <name> --directory <path>
 ```
 
+Adds a new router without tests:
+```bash
+sd add router <name> --skip-tests
+```
+
 #### Adding a service
 
 Adds a new service in the default `src/services` directory:
@@ -70,6 +94,11 @@ sd add service <name>
 Adds a new service in a specific directory (relative to `src`):
 ```bash
 sd add service <name> --directory <path>
+```
+
+Adds a new service without tests:
+```bash
+sd add service <name> --skip-tests
 ```
 
 #### Listing all path aliases

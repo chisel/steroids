@@ -1,8 +1,10 @@
 # Steroids CLI Repository Setup
 
 1. Clone this repo
-2. run `npm install`
-3. run `npm run fetch-template` to fetch the latest Steroids template from https://github.com/chisel/steroids-template
+2. Run `npm install`
+3. Run `npm run fetch-template` to fetch the latest Steroids template from https://github.com/chisel/steroids-template
+4. Run `npm start` to build the source into `bin`
+5. Run `npm link` to install Steroids CLI globally from local build
 
 # NPM Scripts
 

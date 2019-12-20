@@ -62,6 +62,8 @@ export default async function action(operation: string, alias: string, target: s
       // Save files
       fs.writeFileSync(path.resolve(process.cwd(), 'tsconfig.json'), JSON.stringify(tsconfig, null, 2));
 
+      console.log(chalk.greenBright.bold(`Created path alias`));
+
     }
     // Delete operation
     else if ( operation === 'delete' ) {
@@ -79,6 +81,8 @@ export default async function action(operation: string, alias: string, target: s
 
       // Save files
       fs.writeFileSync(path.resolve(process.cwd(), 'tsconfig.json'), JSON.stringify(tsconfig, null, 2));
+
+      console.log(chalk.greenBright.bold(`Path alias was deleted`));
 
     }
 

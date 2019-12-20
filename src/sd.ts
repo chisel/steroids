@@ -12,8 +12,12 @@ program
   .command('new <name>')
   .alias('n')
   .description('creates a new Steroids project')
-  .option('-m, --minimal', 'examples and Steroids documentation won\'t be included in the project')
+  .option('-m, --minimal', 'examples and tests won\'t be setup in the project')
+  .option('--skip-tests', 'tests won\'t be setup in the project')
+  .option('--skip-examples', 'examples won\'t be included in the project')
   .option('--skip-npm-install', 'skips installing dependencies with npm')
+  .option('--skip-git', 'skips initializing git repository')
+  .option('-v, --verbose', 'displays all logs')
   .action(newAction);
 
 // Command: add
@@ -22,6 +26,7 @@ program
   .alias('a')
   .description('adds a new component')
   .option('-d, --directory <path>', 'directory path to add the component in (relative to src)')
+  .option('--skip-tests', 'skips generating test suit for the component')
   .action(addRouterAction);
 
 // Command: docs

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import path from 'path';
 import program from 'commander';
 import newAction from './sd-new';
 import addRouterAction from './sd-add';
@@ -69,7 +70,7 @@ program
   .action(testAction);
 
 // Set version
-program.version('1.1.0');
+program.version(require(path.resolve(__dirname, '..', 'package.json')).version);
 
 // Parse arguments
 program.parse(process.argv);

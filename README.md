@@ -31,124 +31,104 @@ You can read the [official documentation](./docs/steroids.md) to learn how to us
 
 After installing Steroids globally, the `sd` command will be available with the following options:
 
+  - **sd new &lt;name&gt; [options]**: Creates a new Steroids project. The project name should be in kebab case.  
+    Options:
+    - **-m, --minimal**: Skips setting up tests and examples.
+    - **--skip-examples**: Skips setting up examples.
+    - **--skip-tests**: Skips setting up tests.
+    - **--skip-npm-install**: Skips installing dependencies.
+    - **--skip-git**: Skips initializing git repository.
+    - **-v, --verbose**: Verbose logging.
+  - **sd add &lt;component&gt; &lt;name&gt; [options]**: Generates a router or service component under `src/routers` and `src/services` respectively. The component name should be in kebab case. If tests are setup, a test suite is also generated at `test/src/routers` or `test/src/services`.  
+    Options:
+    - **-d, --directory &lt;path&gt;**: A path relative to `src` to override the default component path.
+    - **--skip-tests**: Skips generating test suite for the component.
+  - **sd path &lt;operation&gt; [alias] [target]**: Manages TypeScript paths.  
+    Operations:
+    - **list**: Displays a list of all existing paths.
+    - **new &lt;alias&gt; &lt;target&gt;**: Creates a new path (target must be relative to `src`).
+    - **delete &lt;alias&gt;**: Deletes a path.
+  - **sd build**: Builds the source into `dist`.
+  - **sd run [options]**: Builds and runs the server.  
+    Options:
+    - **-p, --port &lt;port_number&gt;**: Overrides the port number.
+    - **-w, --watch**: Enables live reloading by watching the source files for changes.
+  - **sd test**: Builds and runs the tests against the last server build.
+  - **sd docs [options]**: Generates the documentation using TypeDoc.  
+    Options:
+    - **-s, --serve [port_number]**: Serves the documentation on port 7000 or the given port number.
+  - **sd --version**: Displays Steroids version.
+  - **sd --help**: Displays Steroids help. You can also use this option with any commands to view detailed usage information.
+
+## Examples
+
 #### Creating a new project
 
-Creates a new Steroid project:
+Create a new project called My Project:
 ```bash
-sd new <name>
-```
-
-Creates a new minimal Steroid project (without tests and examples):
-```bash
-sd new <name> --minimal
-```
-
-Creates a new Steroid project without examples:
-```bash
-sd new <name> --skip-examples
-```
-
-Creates a new Steroid project without tests:
-```bash
-sd new <name> --skip-tests
-```
-
-Creates a new Steroid project and skips installing dependencies with NPM:
-```bash
-sd new <name> --skip-npm-install
-```
-
-Creates a new Steroid project and skips initializing git repository:
-```bash
-sd new <name> --skip-git
-```
-Creates a new Steroid project with verbose logs:
-```bash
-sd new <name> --verbose
+sd new my-project
 ```
 
 #### Adding a router
 
-Adds a new router in the default `src/routers` directory:
+Add a new router called UserAuth at `src/routers/user-auth.router.ts`:
 ```bash
-sd add router <name>
-```
-
-Adds a new router in a specific directory (relative to `src`):
-```bash
-sd add router <name> --directory <path>
-```
-
-Adds a new router without tests:
-```bash
-sd add router <name> --skip-tests
+sd add router user-auth
 ```
 
 #### Adding a service
 
-Adds a new service in the default `src/services` directory:
+Add a new service called Firebase at `src/services/firebase.service.ts`:
 ```bash
-sd add service <name>
+sd add service firebase
 ```
 
-Adds a new service in a specific directory (relative to `src`):
-```bash
-sd add service <name> --directory <path>
-```
+#### Managing paths
 
-Adds a new service without tests:
-```bash
-sd add service <name> --skip-tests
-```
-
-#### Listing all path aliases
-
-Displays a list of all path aliases defined in tsconfig.json:
+List all TypeScript paths:
 ```bash
 sd path list
 ```
 
-#### Creating a new path alias
-
-Defines a new path alias in tsconfig.json that will be resolved automatically upon running the project (target must be relative to `src`):
+Add a new path for modular validators at `src/validators`:
 ```bash
-sd path new <alias> <target>
+sd path new @steroids/validator/* validators/*.validator
 ```
 
-#### Deleting a path alias
-
-Deletes a path alias from tsconfig.json:
+Delete the models path:
 ```bash
-sd path delete <alias>
-```
-
-#### Generating the documentation
-
-Generates the TypeDoc developer documentation at `/docs`:
-```bash
-sd docs
-```
-
-Generated the TypeDoc developer documentation at `/docs` and serves it on the specified port (defaults to 7000):
-```bash
-sd docs --serve [port_number]
+sd path delete @steroids/models
 ```
 
 #### Building the source code
 
-Builds the source into `/dist`:
+Build the source into `dist`:
 ```bash
 sd build
 ```
 
 #### Running the server
 
-Runs the server on default port 5000:
+Run the server on default port 5000:
 ```bash
 sd run
 ```
 
-Runs the server on a specific port with live reloading:
+Run the server on port 5003 with live reloading:
 ```bash
-sd run --port <port_number> --watch
+sd run --port 5003 --watch
+```
+
+#### Running the tests
+
+Build and run the tests:
+```bash
+sd test
+```
+
+#### Generating the documentation
+
+Generate the documentation at `docs` and serve on port 5004 with live reloading:
+```bash
+sd docs -p 5004 -w
 ```

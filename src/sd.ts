@@ -6,6 +6,7 @@ import docsAction from './sd-docs';
 import buildAction from './sd-build';
 import runAction from './sd-run';
 import pathAction from './sd-path';
+import testAction from './sd-test';
 
 // Command: new
 program
@@ -59,6 +60,16 @@ program
   .alias('p')
   .description('manages path aliases for easier imports (operations: list, new, delete) (all paths must be relative to src)')
   .action(pathAction);
+
+// Command: test
+program
+  .command('test')
+  .alias('t')
+  .description('runs the tests')
+  .action(testAction);
+
+// Set version
+program.version('1.1.0');
 
 // Parse arguments
 program.parse(process.argv);

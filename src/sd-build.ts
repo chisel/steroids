@@ -1,4 +1,3 @@
-import path from 'path';
 import child from 'child_process';
 import chalk from 'chalk';
 
@@ -21,13 +20,13 @@ export default async function action() {
 
         if ( error ) {
 
-          console.log(chalk.redBright.bold(stderr));
+          console.log(chalk.redBright.bold(stderr.trim()));
           reject(error);
 
         }
         else {
 
-          console.log(stdout);
+          if ( stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -45,13 +44,13 @@ export default async function action() {
 
         if ( error ) {
 
-          console.log(chalk.redBright.bold(stderr));
+          console.log(chalk.redBright.bold(stderr.trim()));
           reject(error);
 
         }
         else {
 
-          console.log(stdout);
+          if ( stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -69,13 +68,13 @@ export default async function action() {
 
         if ( error ) {
 
-          console.log(chalk.redBright.bold(stderr));
+          console.log(chalk.redBright.bold(stderr.trim()));
           reject(error);
 
         }
         else {
 
-          console.log(stdout);
+          if ( stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }

@@ -119,13 +119,13 @@ async function buildSource() {
 
       if ( error ) {
 
-        console.log(chalk.redBright.bold(stderr));
+        console.log(chalk.redBright.bold(stderr.trim()));
         reject(error);
 
       }
       else {
 
-        console.log(stdout);
+        if ( stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }
@@ -143,13 +143,13 @@ async function buildSource() {
 
       if ( error ) {
 
-        console.log(chalk.redBright.bold(stderr));
+        console.log(chalk.redBright.bold(stderr.trim()));
         reject(error);
 
       }
       else {
 
-        console.log(stdout);
+        if ( stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }
@@ -167,13 +167,13 @@ async function buildSource() {
 
       if ( error ) {
 
-        console.log(chalk.redBright.bold(stderr));
+        console.log(chalk.redBright.bold(stderr.trim()));
         reject(error);
 
       }
       else {
 
-        console.log(stdout);
+        if ( stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }

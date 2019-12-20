@@ -101,13 +101,13 @@ export default async function action(name: string, options: any) {
 
           if ( error ) {
 
-            console.log(chalk.redBright.bold(stderr));
+            console.log(chalk.redBright.bold(stderr.trim()));
             reject(error);
 
           }
           else {
 
-            if ( options.verbose ) console.log(stdout);
+            if ( options.verbose && stdout.trim() ) console.log(stdout.trim());
             resolve();
 
           }
@@ -132,13 +132,13 @@ export default async function action(name: string, options: any) {
 
           if ( error ) {
 
-            console.log(chalk.redBright.bold(stderr));
+            console.log(chalk.redBright.bold(stderr.trim()));
             reject(error);
 
           }
           else {
 
-            if ( options.verbose ) console.log(stdout);
+            if ( options.verbose && stdout.trim() ) console.log(stdout.trim());
             resolve();
 
           }

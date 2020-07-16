@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import tar from 'tar';
 import path from 'path';
 import child from 'child_process';
 import chalk from 'chalk';
@@ -12,7 +13,7 @@ import isNpmNameValid from 'validate-npm-package-name';
 export default async function action(name: string, options: any) {
 
   const rootDir = path.resolve(process.cwd(), name);
-  const templateDir = path.resolve(__dirname, '..', 'template');
+  const templatePath = path.resolve(__dirname, '..', 'template.tar.gz');
   const assetsDir = path.resolve(__dirname, '..', 'template-assets');
 
   try {
@@ -27,10 +28,20 @@ export default async function action(name: string, options: any) {
     if ( fs.existsSync(rootDir) ) throw new Error(`Directory "${name}" already exists!`);
 
     // If template doesn't exist
-    if ( ! fs.existsSync(templateDir) ) throw new Error('Steroids template missing! Try running "npm run fetch-template" and "npm run postinstall" inside Steroids installation directory.');
+    if ( ! fs.existsSync(templatePath) ) throw new Error('Steroids template missing! Try running "npm run fetch-template" inside Steroids installation directory.');
 
-    // Copy template to project root
-    fs.copySync(templateDir, rootDir);
+    // Create empty root directory
+    fs.mkdirSync(rootDir);
+
+    // Copy template to project root from template.tar.gz
+    await (new Promise((resolve, reject) => {
+
+      fs.createReadStream(templatePath)
+      .pipe(tar.x({ C: rootDir, strip: 2 }))
+      .on('end', resolve)
+      .on('error', reject);
+
+    }));
 
     // Update package.json
     const packageJson = require(path.resolve(rootDir, 'package.json'));

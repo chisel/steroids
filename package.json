@@ -9,8 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/typescript/bin/tsc --build",
-    "fetch-template": "echo \"Fetching Steroids template...\" && rm -f ./template.tar.gz && rm -rf ./template && git clone git@github.com:chisel/steroids-template.git ./template && cd ./template && rm -r .git && rm README.md && cd .. && node ./pack-template.js && rm -rf ./template",
-    "postinstall": "echo \"Unpacking Steroids template...\" && node unpack-template.js"
+    "fetch-template": "echo \"Fetching Steroids template...\" && rm -f ./template.tar.gz && rm -rf ./template && git clone git@github.com:chisel/steroids-template.git ./template && cd ./template && rm -r .git && rm README.md && cd .. && node ./pack-template.js && rm -rf ./template"
   },
   "repository": {
     "type": "git",
@@ -48,6 +47,7 @@
     "@types/fs-extra": "^8.0.1",
     "@types/mustache": "^0.8.32",
     "@types/serve-static": "^1.13.3",
+    "@types/tar": "^4.0.3",
     "@types/validate-npm-package-name": "^3.0.0"
   }
 }

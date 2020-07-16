@@ -27,7 +27,7 @@ export default async function action(name: string, options: any) {
     if ( fs.existsSync(rootDir) ) throw new Error(`Directory "${name}" already exists!`);
 
     // If template doesn't exist
-    if ( ! fs.existsSync(templateDir) ) throw new Error('Steroids template missing! Try running "npm run fetch-template" inside Steroids installation directory.');
+    if ( ! fs.existsSync(templateDir) ) throw new Error('Steroids template missing! Try running "npm run fetch-template" and "npm run postinstall" inside Steroids installation directory.');
 
     // Copy template to project root
     fs.copySync(templateDir, rootDir);

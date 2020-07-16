@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/typescript/bin/tsc --build",
     "fetch-template": "echo \"Fetching Steroids template...\" && rm -f ./template.tar.gz && rm -rf ./template && git clone git@github.com:chisel/steroids-template.git ./template && cd ./template && rm -r .git && rm README.md && cd .. && node ./pack-template.js && rm -rf ./template",
-    "postinstall": "echo \"Unpacking Steroids template...\" && node unpack-template.js && rm -f ./template.tar.gz"
+    "postinstall": "echo \"Unpacking Steroids template...\" && node unpack-template.js"
   },
   "repository": {
     "type": "git",

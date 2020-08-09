@@ -1,10 +1,16 @@
 import child from 'child_process';
 import chalk from 'chalk';
+import app from 'argumental';
 
-/**
-* Builds the backend source code.
-*/
-export default async function action() {
+app
+
+.command('build')
+.alias('b')
+.description('builds the source code')
+
+.option('-v --verbose', 'displays all logs')
+
+.actionDestruct(async ({ opts }) => {
 
   try {
 
@@ -26,7 +32,7 @@ export default async function action() {
         }
         else {
 
-          if ( stdout.trim() ) console.log(stdout.trim());
+          if ( opts.verbose && stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -50,7 +56,7 @@ export default async function action() {
         }
         else {
 
-          if ( stdout.trim() ) console.log(stdout.trim());
+          if ( opts.verbose && stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -74,7 +80,7 @@ export default async function action() {
         }
         else {
 
-          if ( stdout.trim() ) console.log(stdout.trim());
+          if ( opts.verbose && stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -88,9 +94,11 @@ export default async function action() {
   }
   catch (error) {
 
-    console.log(chalk.redBright.bold('Could not build source code!'));
-    console.error(error);
+    app.emit('error', {
+      msg: 'Could not build the source code!',
+      origin: error
+    });
 
   }
 
-}
+});

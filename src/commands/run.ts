@@ -3,30 +3,48 @@ import path from 'path';
 import child from 'child_process';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
+import app from 'argumental';
+import { portNumber } from '../validators';
 
-/**
-* Builds the backend source code and runs the server.
-* @param options The command options.
-*/
-export default async function action(options: any) {
+app
+
+.command('run')
+.alias('r')
+.description('builds the source code and runs the server')
+
+.option('-p --port <port_number>', 'a port number to run the server on (defaults to 5000)')
+.validate(portNumber)
+.sanitize(port => +port)
+.default(5000)
+
+.option('--skip-build', 'skips building the source code before running the server')
+.option('-w --watch', 'watches for changes to the source code and rebuilds and reruns the server')
+.option('-v --verbose', 'displays all logs')
+
+.actionDestruct(async ({ opts }) => {
 
   try {
-
-    // Sanitize port number
-    options.port = ! isNaN(+options.port) ? +options.port : 5000;
 
     // Update server config
     const configPath = path.resolve(process.cwd(), 'src', 'config.json');
     const serverConfig = require(configPath);
 
-    serverConfig.port = options.port;
+    serverConfig.port = opts.port;
 
-    fs.writeFileSync(configPath, JSON.stringify(serverConfig, null, 2), { encoding: 'utf-8' });
+    await fs.writeFile(configPath, JSON.stringify(serverConfig, null, 2), { encoding: 'utf-8' });
 
-    // Build the source code
-    console.log(chalk.yellow.bold(`Building the source code...`));
+    if ( ! opts.skipBuild ) {
 
-    await buildSource();
+      // Build the source code
+      console.log(chalk.yellow.bold(`Building the source code...`));
+
+      await buildSource(opts.verbose);
+
+    }
+
+    // If no server build is available
+    if ( ! await fs.pathExists(path.resolve(process.cwd(), 'dist')) )
+      throw new Error('No server build to run! Try running the server without the --skip-build flag.');
 
     console.log(chalk.yellow.bold(`Running the server...`));
 
@@ -34,7 +52,7 @@ export default async function action(options: any) {
     let serverProcess = runServer();
 
     // Watch for changes and restart the server if needed
-    if ( options.watch ) {
+    if ( opts.watch ) {
 
       let resetting: boolean = false;
       let needsNewReset: boolean = false;
@@ -57,12 +75,12 @@ export default async function action(options: any) {
         serverProcess.kill();
 
         // Rebuild the source
-        buildSource()
+        buildSource(opts.verbose)
         .then(() => {
 
           // Start a new process
           serverProcess = runServer();
-          console.log(chalk.greenBright.bold(`Server running at http://localhost:${require(configPath).port || 5000}`));
+          console.log(chalk.greenBright.bold(`Server running at http://localhost:${require(configPath).port || opts.port}`));
 
         })
         .catch(error => {
@@ -96,19 +114,22 @@ export default async function action(options: any) {
 
     }
 
-    console.log(chalk.greenBright.bold(`Server running at http://localhost:${options.port}${options.watch ? ' with live reloading' : ''}`));
+    console.log(chalk.greenBright.bold(`Server running at http://localhost:${opts.port}${opts.watch ? ' with live reloading' : ''}`));
+
 
   }
   catch (error) {
 
-    console.log(chalk.redBright.bold('Could not run server!'));
-    console.error(error);
+    app.emit('error', {
+      msg: 'Could not run the server!',
+      origin: error
+    });
 
   }
 
-}
+});
 
-async function buildSource() {
+async function buildSource(verbose: boolean) {
 
   await new Promise((resolve, reject) => {
 
@@ -125,7 +146,7 @@ async function buildSource() {
       }
       else {
 
-        if ( stdout.trim() ) console.log(stdout.trim());
+        if ( verbose && stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }
@@ -149,7 +170,7 @@ async function buildSource() {
       }
       else {
 
-        if ( stdout.trim() ) console.log(stdout.trim());
+        if ( verbose && stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }
@@ -173,7 +194,7 @@ async function buildSource() {
       }
       else {
 
-        if ( stdout.trim() ) console.log(stdout.trim());
+        if ( verbose && stdout.trim() ) console.log(stdout.trim());
         resolve();
 
       }

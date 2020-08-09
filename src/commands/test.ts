@@ -1,25 +1,31 @@
-import child from 'child_process';
 import chalk from 'chalk';
 import path from 'path';
+import child from 'child_process';
 import fs from 'fs-extra';
+import app from 'argumental';
 
-/**
-* Runs the tests.
-*/
-export default async function action() {
+app
+
+.command('test')
+.alias('t')
+.description('runs the tests')
+
+.option('-v --verbose', 'displays all logs')
+
+.actionDestruct(async ({ opts }) => {
 
   try {
 
     // Show error if tests are not setup
-    if ( ! fs.existsSync(path.resolve(process.cwd(), 'test', 'src', 'main.spec.ts')) )
+    if ( ! await fs.pathExists(path.resolve(process.cwd(), 'test', 'src', 'main.spec.ts')) )
       return console.log(chalk.redBright.bold('Tests are not setup in this project!'));
 
     // If pre-test.js is missing
-    if ( ! fs.existsSync(path.resolve(process.cwd(), 'pre-test.js')) )
+    if ( ! await fs.pathExists(path.resolve(process.cwd(), 'pre-test.js')) )
       return console.log(chalk.redBright.bold('Test preparation script is missing!'));
 
     // If source is not built
-    if ( ! fs.existsSync(path.resolve(process.cwd(), 'dist')) )
+    if ( ! await fs.pathExists(path.resolve(process.cwd(), 'dist')) )
       return console.log(chalk.redBright.bold('Server is not built! Please run "sd build" before running the tests.'));
 
     await new Promise((resolve, reject) => {
@@ -37,7 +43,7 @@ export default async function action() {
         }
         else {
 
-          if ( stdout.trim() ) console.log(stdout.trim());
+          if ( opts.verbose && stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -61,7 +67,7 @@ export default async function action() {
         }
         else {
 
-          if ( stdout.trim() ) console.log(stdout.trim());
+          if ( opts.verbose && stdout.trim() ) console.log(stdout.trim());
           resolve();
 
         }
@@ -101,9 +107,11 @@ export default async function action() {
   }
   catch (error) {
 
-    console.log(chalk.redBright.bold('Could not run tests!'));
-    console.error(error);
+    app.emit('error', {
+      msg: 'Could not run tests!',
+      origin: error
+    });
 
   }
 
-}
+});

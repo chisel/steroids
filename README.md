@@ -43,21 +43,25 @@ After installing Steroids globally, the `sd` command will be available with the 
     Options:
     - **-d, --directory &lt;path&gt;**: A path relative to `src` to override the default component path.
     - **--skip-tests**: Skips generating test suite for the component.
-  - **sd path &lt;operation&gt; [alias] [target]**: Manages TypeScript paths.  
-    Operations:
-    - **list**: Displays a list of all existing paths.
-    - **new &lt;alias&gt; &lt;target&gt;**: Creates a new path (target must be relative to `src`).
-    - **delete &lt;alias&gt;**: Deletes a path.
+  - **sd path list**: Displays a list of all existing paths.
+  - **sd path new &lt;alias&gt; &lt;target&gt;**: Creates a new path (target must be relative to `src`).
+  - **sd path delete &lt;alias&gt;**: Deletes a path.
   - **sd build**: Builds the source into `dist`.
+    - **-v, --verbose**: Displays all logs.
   - **sd run [options]**: Builds and runs the server.  
     Options:
     - **-p, --port &lt;port_number&gt;**: Overrides the port number.
     - **-w, --watch**: Enables live reloading by watching the source files for changes.
+    - **--skip-build**: Skips building the source code before running the server.
+    - **-v, --verbose**: Displays all logs.
   - **sd test**: Builds and runs the tests against the last server build.
+    - **-v, --verbose**: Displays all logs.
   - **sd docs [options]**: Generates the documentation using TypeDoc inside `docs` directory.  
     Options:
-    - **-s, --serve [port_number]**: Serves the documentation on port 7000 or the given port number.
+    - **-s, --serve**: Serves the documentation on port 7000.
+    - **-p, --port**: Overrides the port number the documentation is being served on.
     - **-d, --directory &lt;path&gt;**: A path relative to project root to override the default documentation directory.
+    - **-v, --verbose**: Displays all logs.
   - **sd --version**: Displays Steroids version.
   - **sd --help**: Displays Steroids help. You can also use this option with any commands to view detailed usage information.
 
@@ -93,12 +97,12 @@ sd path list
 
 Add a new path for modular validators at `src/validators`:
 ```bash
-sd path new @steroids/validator/* validators/*.validator
+sd path new "@steroids/validator/*" "validators/*.validator"
 ```
 
-Delete the models path:
+Delete the validators path:
 ```bash
-sd path delete @steroids/models
+sd path delete "@steroids/validator/*"
 ```
 
 #### Building the source code
@@ -115,9 +119,9 @@ Run the server on default port 5000:
 sd run
 ```
 
-Run the server on port 5003 with live reloading:
+Run the server on port 5003 with live reloading and skip building for the first time:
 ```bash
-sd run --port 5003 --watch
+sd run --port 5003 --watch --skip-build
 ```
 
 #### Running the tests
@@ -129,7 +133,7 @@ sd test
 
 #### Generating the documentation
 
-Generate the documentation at `docs` and serve on port 5004 with live reloading:
+Generate the documentation at `docs` and serve on port 5004:
 ```bash
-sd docs -p 5004 -w
+sd docs -s -p 5004
 ```

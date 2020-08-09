@@ -39,18 +39,18 @@ After installing Steroids globally, the `sd` command will be available with the 
     - **--skip-npm-install**: Skips installing dependencies.
     - **--skip-git**: Skips initializing git repository.
     - **-v, --verbose**: Verbose logging.
-  - **sd add router &lt;name&gt; [options]**: Generates a router component under `src/routers`.
+  - **sd add router &lt;name&gt; [options]**: Generates a router component under `src/routers`.  
     Options:
     - **-d, --directory &lt;path&gt;**: A path to override the default location the router is generated at.
     - **--skip-tests**: Skips generating the unit test for router.
-  - **sd add service &lt;name&gt; [options]**: Generates a service component under `src/services`.
+  - **sd add service &lt;name&gt; [options]**: Generates a service component under `src/services`.  
     Options:
     - **-d, --directory &lt;path&gt;**: A path to override the default location the service is generated at.
     - **--skip-tests**: Skips generating the unit test for service.
   - **sd path list**: Displays a list of all existing paths.
   - **sd path new &lt;alias&gt; &lt;target&gt;**: Creates a new path (target must be relative to `src`).
   - **sd path delete &lt;alias&gt;**: Deletes a path.
-  - **sd build [options]**: Builds the source into `dist`.
+  - **sd build [options]**: Builds the source into `dist`.  
     Options:
     - **-v, --verbose**: Displays all logs.
   - **sd run [options]**: Builds and runs the server.  
@@ -59,7 +59,7 @@ After installing Steroids globally, the `sd` command will be available with the 
     - **-w, --watch**: Enables live reloading by watching the source files for changes.
     - **--skip-build**: Skips building the source code before running the server.
     - **-v, --verbose**: Displays all logs.
-  - **sd test [options]**: Builds and runs the tests against the last server build.
+  - **sd test [options]**: Builds and runs the tests against the last server build.  
     Options:
     - **-v, --verbose**: Displays all logs.
   - **sd docs [options]**: Generates the documentation using TypeDoc inside `docs` directory.  
